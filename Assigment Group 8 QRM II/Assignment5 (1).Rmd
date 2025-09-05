@@ -116,8 +116,7 @@ The mean of profits is $55265374. The median of profits is 0. The minimum of pro
 
 ```{r}
 which.max(movies2$profits)
-movies2%>%
-  summarise(title = ma)
+
 
 ```
 
@@ -129,7 +128,12 @@ Write your formulated response here.
 
 ```{r}
 
-#WRITE YOUR CODE HERE
+
+library(ggplot2)
+ggplot(movies2, aes(x = , y = profits)) + 
+  geom_boxplot()
+  
+  
 
 ```
 
@@ -141,19 +145,21 @@ Write your formulated response here.
 
 ```{r}
 
-#WRITE YOUR CODE HERE
+movies2 = movies2 %>%
+  mutate(log_profits = log(profits))
+
+mean(movies2$log_profits, na.rm = T)
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+For the negative profits you get a NaN, not a number, error. If we take the mean of the log of the profits and remove the NA's then we get -Infnity.
 
 *Step e*
 
 ```{r}
 
-#WRITE YOUR CODE HERE
 
 ```
 
