@@ -1,7 +1,7 @@
 ---
 title: "QRM II Graded Assignment (5), Period 1 2025"
 subtitle: "Material by Sjoerd van Alten and Klervie Toczé"
-author: "Fill in your group number and names here"
+author: "Assignment Group 8, Catherina Mikhail, Mayte Leegwater, Merel Vonk, Yasmina Andaou"
 date:  "`r format(Sys.Date(), '%d-%m-%Y')`"
 output:
   pdf_document:
@@ -63,21 +63,23 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
 ```{r}
-install.packages("readr")
+
 library(readr)
 movies2 = read_tsv("movies2.tsv")
+#Here I am computing the number of observations, variables and subjects
 ncol(movies2)
 nrow(movies2)
 ```
 
 **Your Answer:**
 
-This dataset has 606 observations. There are 19 variables and 606 subjects. what consists of a subject...
+This dataset has 606 observations. There are 19 variables and 606 subjects. A subject in a dataset is the unit of analysis that each row represents, in this case for example each row is gives all the information about 1 movie with variables such as the revenue, runtime, average voting and the other 16 variables.
 
 
 2. Which of the following types of variables are present in your data set? (i) nominal; (ii) ordinal; (iii); interval; (iv) ratio. If present, name one example of such a variable present in your data set. \textbf{[4 points]}
 
 ```{r}
+#Here I am looking at the head of the dataset to determine whether the variables are nominal, ordinal, interval or ratio
 head(movies2)
 ```
 
@@ -100,84 +102,113 @@ For each step, you should provide first all the code you used to answer the ques
 *Step a*
 
 ```{r}
+#Here I am making a new variable called profits
 library(tidyr)
 library(tidyverse)
 movies2 = movies2 %>%
   mutate(profits = revenue -budget)
-
+#Here I am computing the minimum, maximum and mean values of the variable profits
 summary(movies2$profits)
 ```
 
 **Your Answer:**
 
-The mean of profits is $55265374. The median of profits is 0. The minimum of profits is -111007242. The maximum of profits is 1316249360.
+The mean of profits is 55265374 dollars. The median of profits is 0. The minimum of profits is -111007242. The maximum of profits is 1316249360.
 
 *Step b*
 
 ```{r}
-which.max(movies2$profits)
+#Here I am making a seperate dataset with 1 variable and 1 observation to see which movie has the highest profits and how much it is.
+max_profit_movie = movies2[which.max(movies2$profits), "title"]
+print(max_profit_movie)
+max_profit = max(movies2$profits)
 
-
+#Here I am doing the same thing as above but then for the lowest profits
+min_profit_movie = movies2[which.min(movies2$profits), "title"]
+print(min_profit_movie)
+min_profit = min(movies2$profits)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The movie with the highest profit of 1316249360 dollars is Furious 7. The movie with the lowest profit is Mars Needs Moms and has a negative profit of minus 111007242 dollars.
 
 *Step c*
 
 ```{r}
+#Here I am dividing the profits into quartiles as I have to plot a boxplot
+movies2$quartile = cut(movies2$profits, breaks = quantile(movies2$profits, probs = c(0, 0.25,0.5, 0.75, 1)), labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = T)
 
-
+#Here I am plotting a boxplot for the profits with quartiles
 library(ggplot2)
-ggplot(movies2, aes(x = , y = profits)) + 
-  geom_boxplot()
-  
+
+ggplot(movies2, aes(x = quartile, y = profits)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot of Movie Profits by Quartile", x = "Quartile", y = "Profits")
   
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The boxplot shows that most movies make very little profit, with many barely breaking even in Q2 or even losing money in Q1. Only a small share of films in the top quartile in  Q4 generate significant profits, and a handful of blockbuster hits drive the industry’s earnings. Overall, the movie industry is high-risk, high-reward, relying heavily on rare mega-hits to stay profitable.
+
 
 *Step d*
 
 ```{r}
-
+#Here I make a new variable with the log transformed profits
 movies2 = movies2 %>%
   mutate(log_profits = log(profits))
-
+#Here I compute the mean but we were not sure to remove the NAs or not so in the first one we did not remove it and in the second we did to see if we would get different answers
+mean(movies2$log_profits)
 mean(movies2$log_profits, na.rm = T)
 
 ```
 
 **Your Answer:**
 
-For the negative profits you get a NaN, not a number, error. If we take the mean of the log of the profits and remove the NA's then we get -Infnity.
+When you do not remove the NAs, while computing the mean of the log transformed profits you get an NaN, so a not a number error. However, if you do remove the NAs while computing the mean of the log transformed profits you get a minus Inf.
 
 *Step e*
 
 ```{r}
+#Here I put NA instead of the profits that are negative or equal to 0, then I used the same code as before to calculate the logs and then I calculated the mean of the logs of the profits again.
+movies2$profits = ifelse(movies2$profits <= 0 , NA, movies2$profits)
+movies2 = movies2 %>%
+  mutate(log_profits = log(profits))
+mean(movies2$log_profits, na.rm = T)
 
+#As I have to make a boxplot, I first divided the logs into quartiles
+movies2$quartiles = cut(movies2$log_profits, breaks = quantile(movies2$log_profits, probs = c(0, 0.25,0.5, 0.75, 1), na.rm = T), labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = T)
 
+# Here I am plotting the boxplot with the log transformed profits with quartiles
+ggplot(movies2, aes(x = quartiles, y = log_profits)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot of Movies Log Transformed Profits", x = "Quartiles", y = "Log of Profits")
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The mean of the log of the profits is now 17.62456. 
+
+The first boxplot of the profits before being log-transformed shows that movie profits are extremely skewed, with most films making very little and a few blockbusters dominating the scale. This highlights the “winner-takes-most” nature of the industry but makes it hard to see differences among the majority of movies. The second boxplot, so the log-transformed profits, reduces the effect of extreme outliers, spreading the data more evenly across quartiles. This makes the relative differences between groups clearer and shows a smoother upward trend in profits from Q1 to Q4. Together, they reveal both the extreme inequality of raw profits and the more balanced progression when viewed on a log scale.
+
 
 *Step f*
 
 ```{r}
+#Here I plot a scatterplot with runtime on x-axis and on the y-axis the vote average
 
-#WRITE YOUR CODE HERE
+ggplot(movies2, aes(x = runtime, y = vote_average)) + 
+  geom_point() + 
+  labs(title = "Scatterplot Movies Average Voting and Runtime", x = "runtime", y = "average voting")
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The scatterplot shows a weak positive relationship between runtime and ratings: longer movies tend to score slightly higher, though the effect is small. Most films cluster around 90–120 minutes with average ratings, while very long films (150+ minutes) often maintain strong scores around 7–8. This may reflect that only higher-quality projects get extended runtimes, supported by bigger budgets and stronger storytelling. Short films under 60 minutes generally perform poorly. Overall, runtime has some influence, but we think that audience satisfaction depends far more on quality than length.
 
 # Week 2 
 1 Is your dataset movies2.tsv the full population, or is it a sample of a larger population? If the latter, how would you describe the full population? \textbf{[4 points]}
