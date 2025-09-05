@@ -63,23 +63,27 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
 ```{r}
-
+install.packages("readr")
+library(readr)
+movies2 = read_tsv("movies2.tsv")
+ncol(movies2)
+nrow(movies2)
 ```
 
 **Your Answer:**
 
-Write your response here.
+This dataset has 606 observations. There are 19 variables and 606 subjects. what consists of a subject...
 
 
 2. Which of the following types of variables are present in your data set? (i) nominal; (ii) ordinal; (iii); interval; (iv) ratio. If present, name one example of such a variable present in your data set. \textbf{[4 points]}
 
 ```{r}
-#WRITE YOUR CODE HERE
+head(movies2)
 ```
 
-**Your Answer:**
+**Your Answer:** 
 
-Write your response here.
+The variable Keywords is nominal. The variable Vote Average is ordinal. The variable Budget is ratio. The variable release_year is interval.
 
 
 3. A movie studio wants to know which types of movies give maximal profit. Perform the following steps to provide the movie studio with an analysis which corresponds to their request:
@@ -96,20 +100,24 @@ For each step, you should provide first all the code you used to answer the ques
 *Step a*
 
 ```{r}
+library(tidyr)
+library(tidyverse)
+movies2 = movies2 %>%
+  mutate(profits = revenue -budget)
 
-#WRITE YOUR CODE HERE
-
+summary(movies2$profits)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The mean of profits is $55265374. The median of profits is 0. The minimum of profits is -111007242. The maximum of profits is 1316249360.
 
 *Step b*
 
 ```{r}
-
-#WRITE YOUR CODE HERE
+which.max(movies2$profits)
+movies2%>%
+  summarise(title = ma)
 
 ```
 
