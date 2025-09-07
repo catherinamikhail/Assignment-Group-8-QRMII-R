@@ -135,7 +135,7 @@ The movie with the highest profit of 1316249360 dollars is Furious 7. The movie 
 
 *Step c*
 
-```{r}
+```{r, fig.width=5, fig.height=3}
 #Here I am dividing the profits into quartiles as I have to plot a boxplot
 movies2$quartile = cut(movies2$profits, breaks = quantile(movies2$profits, probs = c(0, 0.25,0.5, 0.75, 1)), labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = T)
 
@@ -172,7 +172,7 @@ When you do not remove the NAs, while computing the mean of the log transformed 
 
 *Step e*
 
-```{r}
+```{r, fig.width=5, fig.height=2}
 #Here I put NA instead of the profits that are negative or equal to 0, then I used the same code as before to calculate the logs and then I calculated the mean of the logs of the profits again.
 movies2$profits = ifelse(movies2$profits <= 0 , NA, movies2$profits)
 movies2 = movies2 %>%
@@ -197,7 +197,7 @@ The first boxplot of the profits before being log-transformed shows that movie p
 
 *Step f*
 
-```{r}
+```{r, fig.width=5, fig.height=2}
 #Here I plot a scatterplot with runtime on x-axis and on the y-axis the vote average
 
 ggplot(movies2, aes(x = runtime, y = vote_average)) + 
@@ -633,4 +633,3 @@ Write your formulated response here.
 #WRITE YOUR CODE HERE
 
 ```
-
