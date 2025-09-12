@@ -292,16 +292,14 @@ e. In your opinion, is a sample of 25 movies sufficient to get a reliable estima
 #recoding profits into millions and calculating the variance of the mean
 movies2$profits = movies2$profits/1000000
 library(tidyverse)
-var_profits = movies2 %>%
-  summarise(var_profits = var(profits, na.rm = T))
-print(var_profits)
+
 var_profits2 = var(movies2$profits, na.rm = T)
 print(var_profits2)
 ```
 
 **Your Answer:**
 
-The variance of profits is `r var_profits`20054.82	million.
+The variance of profits is `r var_profits2`	million.
 
 *step b*
 
@@ -315,7 +313,7 @@ print(var_sample_profits)
 
 **Your Answer:**
 
-The variance of the profits of the sample is 29515.19 million and is higher than the variance of the full population of 20054.82 million.
+The variance of the profits of the sample is `r var_sample_profits` million and is higher than the variance of the full population of `r var_profits2` million.
 
 *step c*
 
@@ -325,20 +323,21 @@ set.seed(123)
 sample_vars = numeric(100)
 for (i in 1:100) {
   samples_movies = movies2[sample(nrow(movies2), 25),]
-  sample_vars[i] = var(samples_movies$profits)
+  sample_vars[i] = var(samples_movies$profits, na.rm = T)
 }
 head(sample_vars)
 ```
 
 **Your Answer:**
 
-the variances of the start of the vactor with the sample variances are: 15137.114; 6075.446;  1824.446; 10427.623; 27108.645; 24506.847 million.
+the variances of the start of the vector with the sample variances are: `r  head(sample_vars)`
 
 *step d*
 
 ```{r, fig.width=5, fig.height=2}
 #computing the mean, standard deviation and plotting the histogram of the sample variances
 summary(sample_vars)
+mean(sample_vars)
 sd(sample_vars)
 sample_vars = data.frame(sample_vars)
 library(ggplot2)
@@ -349,7 +348,7 @@ ggplot(sample_vars, aes(x = sample_vars)) +
 
 **Your Answer:**
 
-The mean of the sample variances is 19129 million and the standard deviation is 16962.33 million.The shape of the distribution is more right skewed.
+The mean of the sample variances is 30139.83 million and the standard deviation is 29945.74 million.The shape of the distribution is more right skewed.
 
 *step e*
 
