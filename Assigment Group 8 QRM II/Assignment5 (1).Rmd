@@ -63,7 +63,6 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
 ```{r}
-install.packages("readr", "tidyverse")
 library(readr)
 movies2 = read_tsv("movies2.tsv")
 #Here I am computing the number of observations, variables and subjects
@@ -215,7 +214,7 @@ The scatterplot shows a weak positive relationship between runtime and ratings: 
 
 **Your Answer:**
 
-Our dataset is probably a sample of a larger population as we only see 606 subjects so
+Our dataset is probably a sample of a larger population as we only see 606 subjects. I would describe the full population as all the movies existing starting from 1990 until 2016.
 
 
 2
@@ -228,28 +227,40 @@ c.  How trustworthy do you consider your conclusion to answer 2b? Use the term "
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+library(dplyr)
+actor = movies2 %>%
+  count(first_actor, sort = T) %>%
+  head(1)
+print(actor)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Actor Bruce Willis played in 5 movies, which is the most.
 
 *step b*
 
 ```{r}
 #WRITE YOUR CODE HERE
+average_rev_Bruce = movies2 %>%
+  filter(first_actor == "Bruce Willis") %>%
+  summarise(av_rev_Bruce = mean(revenue))
+print(average_rev_Bruce)
 
+average_rev_generally = movies2 %>%
+  summarise(rev_gen = mean(revenue))
+print(average_rev_generally)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The average revenue of the movies in which Bruce Willis played is 175.160.583 and the average revenue of all movies is 84.953.602. So the average revenue of Bruce Willis lies above the general average revenue.
 
 *step c*
 
 ```{r}
 #WRITE YOUR CODE HERE
+
 
 ```
 
@@ -269,45 +280,64 @@ e. In your opinion, is a sample of 25 movies sufficient to get a reliable estima
 
 ```{r}
 #WRITE YOUR CODE HERE
+movies2$profits = movies2$profits/1000000
+var_profits = movies2 %>%
+  summarise(var_profits = var(profits))
+print(var_profits)
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The variance of profits is 20054.82 million
 
 *step b*
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+set.seed(123)
+movies_sample = movies2[sample(nrow(movies2), 25),]
+var_sample_profits = var(movies2$profits)
+print(var_sample_profits)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The variance of the profits of the sample is 29515.19 million and is higher than the variance of the full population of 20054.82 million.
 
 *step c*
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+set.seed(123)
+sample_vars = numeric(100)
+for (i in 1:100) {
+  samples_movies = movies2[sample(nrow(movies2), 25),]
+  sample_vars[i] = var(samples_movies$profits)
+}
+head(sample_vars)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+the variances of the start of the vactor with the sample variances are: 15137.114; 6075.446;  1824.446; 10427.623; 27108.645; 24506.847 million.
 
 *step d*
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+summary(sample_vars)
+sd(sample_vars)
+sample_vars = data.frame(sample_vars)
+library(ggplot2)
+ggplot(sample_vars, aes(x = sample_vars)) + 
+  geom_histogram(binwidth = diff(range(sample_vars))/40, colour = "black", fill = "skyblue") + 
+  labs(title = "Distribution of Sample Variances", x = "Sample Variances", y = "Count")
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The mean of the sample variances is 19129 million and the standard deviation is 16962.33 million.
 
 *step e*
 
