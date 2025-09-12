@@ -291,15 +291,17 @@ e. In your opinion, is a sample of 25 movies sufficient to get a reliable estima
 ```{r}
 #recoding profits into millions and calculating the variance of the mean
 movies2$profits = movies2$profits/1000000
+library(tidyverse)
 var_profits = movies2 %>%
   summarise(var_profits = var(profits, na.rm = T))
 print(var_profits)
-
+var_profits2 = var(movies2$profits, na.rm = T)
+print(var_profits2)
 ```
 
 **Your Answer:**
 
-The variance of profits is 20054.82	million.
+The variance of profits is `r var_profits`20054.82	million.
 
 *step b*
 
@@ -307,7 +309,7 @@ The variance of profits is 20054.82	million.
 #creation of a sample of 25 movies, new data set and computing the variance of this sample
 set.seed(123)
 movies_sample = movies2[sample(nrow(movies2), 25),]
-var_sample_profits = var(movies2$profits)
+var_sample_profits = var(movies_sample$profits, na.rm =T)
 print(var_sample_profits)
 ```
 
