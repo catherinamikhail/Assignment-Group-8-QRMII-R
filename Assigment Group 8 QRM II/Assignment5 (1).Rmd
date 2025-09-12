@@ -63,7 +63,7 @@ Each week consists of 1, 2, or 3 subquestions. The total amount of points you ca
 1.  Find the dataset “movies2.tsv” on Canvas. Describe your data set: How many observations does it have. How many variables are there? How many subjects? What consists of a subject? \textbf{[4 points]}
 
 ```{r}
-
+install.packages("rtools")
 library(readr)
 movies2 = read_tsv("movies2.tsv")
 #Here I am computing the number of observations, variables and subjects
@@ -215,7 +215,7 @@ The scatterplot shows a weak positive relationship between runtime and ratings: 
 
 **Your Answer:**
 
-Write your formulated response here.
+Our dataset is probably a sample of a larger population as we only see 606 subjects so
 
 
 2
