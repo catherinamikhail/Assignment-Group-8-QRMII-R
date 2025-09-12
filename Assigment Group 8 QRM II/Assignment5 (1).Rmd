@@ -226,7 +226,7 @@ c.  How trustworthy do you consider your conclusion to answer 2b? Use the term "
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#looking for the actor with the most movies
 library(dplyr)
 actor = movies2 %>%
   count(first_actor, sort = T) %>%
@@ -241,12 +241,13 @@ Actor Bruce Willis played in 5 movies, which is the most.
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#computing the average revenue of Bruce
 average_rev_Bruce = movies2 %>%
   filter(first_actor == "Bruce Willis") %>%
   summarise(av_rev_Bruce = mean(revenue))
 print(average_rev_Bruce)
 
+#computing the average revenue general
 average_rev_generally = movies2 %>%
   summarise(rev_gen = mean(revenue))
 print(average_rev_generally)
@@ -259,14 +260,23 @@ The average revenue of the movies in which Bruce Willis played is 175.160.583 an
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#computing the varience of the subset Bruce of the revenue and the general variance of the full dataset
+library(tidyverse)
 
+var_bruce = movies2 %>%
+  filter(first_actor == "Bruce Willis") %>%
+  summarise(var_bruce = var(revenue))
+print(var_bruce)
+
+var_gen = movies2 %>%
+  summarise(var_gen = var(revenue))
+print(var_gen)
 
 ```
 
 **Your Answer:**
+Based on the variances we conclude that our answer is not trustworthy because the variance of the revenue of Bruce was far greater than the variance of the full data set, which is based on a higher n. This means that the expected value of the sample of Bruce Willis will deviate from his full population, which would consists of all the movies he played in, as our average is only based on 5 movies of Bruce. So the higher the n, the lower the variance and the more the sample mean approaches the expected value, which is also known as the law of large numbers. This is not the case with Bruce Willis.
 
-Write your formulated response here.
 
 3 For this question, you will assume that your data set is the full population. 
 
@@ -279,22 +289,22 @@ e. In your opinion, is a sample of 25 movies sufficient to get a reliable estima
 *step a*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#recoding profits into millions and calculating the variance of the mean
 movies2$profits = movies2$profits/1000000
 var_profits = movies2 %>%
-  summarise(var_profits = var(profits))
+  summarise(var_profits = var(profits, na.rm = T))
 print(var_profits)
 
 ```
 
 **Your Answer:**
 
-The variance of profits is 20054.82 million
+The variance of profits is 20054.82	million.
 
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#creation of a sample of 25 movies, new data set and computing the variance of this sample
 set.seed(123)
 movies_sample = movies2[sample(nrow(movies2), 25),]
 var_sample_profits = var(movies2$profits)
@@ -308,7 +318,7 @@ The variance of the profits of the sample is 29515.19 million and is higher than
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#creating a for loop to make different samples with vectors computing the variance
 set.seed(123)
 sample_vars = numeric(100)
 for (i in 1:100) {
@@ -324,8 +334,8 @@ the variances of the start of the vactor with the sample variances are: 15137.11
 
 *step d*
 
-```{r}
-#WRITE YOUR CODE HERE
+```{r, fig.width=5, fig.height=2}
+#computing the mean, standard deviation and plotting the histogram of the sample variances
 summary(sample_vars)
 sd(sample_vars)
 sample_vars = data.frame(sample_vars)
@@ -337,13 +347,13 @@ ggplot(sample_vars, aes(x = sample_vars)) +
 
 **Your Answer:**
 
-The mean of the sample variances is 19129 million and the standard deviation is 16962.33 million.
+The mean of the sample variances is 19129 million and the standard deviation is 16962.33 million.The shape of the distribution is more right skewed.
 
 *step e*
 
 **Your Answer:**
 
-Write your formulated response here.
+Given the fact that the full population consists of 606 movies, I think personally that a sample size of 25 is too small to get a reliable estimate of the population variance of profits, using the sample variance and I also think that because there are big differences in profits across movies that a sample may be not representative for the whole population.
 
 **Your answer here**
 
@@ -360,7 +370,8 @@ b. Now, assume that the variance of *runtime* amongst thriller movies in your da
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+thriller = movies2 %>%
+  filter(genre == "Thriller")
 
 ```
 
