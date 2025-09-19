@@ -374,23 +374,47 @@ b. Now, assume that the variance of *runtime* amongst thriller movies in your da
 thriller = movies2 %>%
   filter(genre == "Thriller")
 
+N<-length(thriller$runtime)
+mean_runtime <- mean(thriller$runtime)
+sd_runtime   <- sd(thriller$runtime)
+t_a2 <- qt(0.995, df = N - 1) 
+
+
+LOW <- mean_runtime - t_a2 * (sd_runtime/ sqrt(N))
+UP  <- mean_runtime + t_a2 * (sd_runtime/ sqrt(N))
+
+
+CI<-paste0("(",round(LOW,4),",",round(UP,4),")")
+print(CI)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+There is a 99 percent certainty that the value of runtime is between the 98.6087 and 106.0333.
 
 *step b*
 
 ```{r}
 #WRITE YOUR CODE HERE
+N<-length(thriller$runtime)
+mean_runtime <- mean(thriller$runtime)
+sd_runtime   <- sd(thriller$runtime)
+z_a2 <- qnorm(0.995)
+
+
+LOW <- mean_runtime - z_a2 * (sd_runtime/ sqrt(N))
+UP  <- mean_runtime + z_a2 * (sd_runtime/ sqrt(N))
+
+
+CI<-paste0("(",round(LOW,4),",",round(UP,4),")")
+print(CI)
 
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+There is a 99 percent certainty that the value of runtime is between 98.6971 and 105.9448. The interval is less wide than the interval of question 1a. This is because in 1a we don't know the standard deviation, while in question b the sd is certain. We have to take the uncertainty of the sd into account in the interval of question 1a, and thats why the interval of 1a is wider than 1b. 
 
 
 2
@@ -402,25 +426,36 @@ b. For the validity of your test in 2a, what assumption about the distribution o
 
 ```{r}
 #WRITE YOUR CODE HERE
+s2 <- var(movies2$runtime)
+
+sigma_sq <- 500
+
+chi2_stat <- (N - 1) * s2 / sigma_sq
+
+alpha <- 0.05
+chi2_L <- qchisq(alpha/2, df = N-1)       
+chi2_U <- qchisq(1 - alpha/2, df = N-1) 
 
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+H0 --> sigma^2 = 500 H1 --> sigma^2 IS NOT 500. The test statistic is 81.16 if you take a alpha of 0.05 then you will get critical values 57 and 106.63. The test statistic falls in the interval of the critical values so the hypothesis should not be rejected. 
 
 *step b*
 
-```{r}
+```{r, fig.width=5, fig.height=2}
 #WRITE YOUR CODE HERE
-
-
+ggplot(movies2, aes(x = revenue)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black") +
+  labs(title = "Histogram of Revenue", x = "Revenue", y = "Count") +
+  theme_minimal()
 ```
 
 **Your Answer:**
+For the validity of the test the values should be normally distributed, but as can be seen in the graph, this is not the case. So the conclusions made in the previous excercise aren't valid. 
 
-Write your formulated response here.
 
 3. There is an argument going on in the movie studio. *Bob* claims that they should make higher-quality movies, as this will bring in more profits. *Chantal* disagrees. She tells Bob that mediocre movies bring in the most profits. You are asked to advise on who is right.
 
@@ -431,15 +466,24 @@ d. Write an advice to settle the argument between Bob and Chantal. \textbf{[4 po
 
 *step a*
 
-```{r}
+```{r, fig.width=5, fig.height=2}
 #WRITE YOUR CODE HERE
+movies2 <- movies2 %>%
+  mutate(vote_average_rounded = floor(vote_average))  
 
+# Histogram met ggplot2
+ggplot(movies2, aes(x = vote_average_rounded)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black") +
+  labs(title = "Histogram vote average",
+       x = "rounded voting average",
+       y = "frequency") +
+  scale_x_continuous(breaks = seq(1, 10, 1))
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The floor function is used to round the numbers and ggplot + geom histogram to plot the graph/
 
 *step b*
 
