@@ -469,7 +469,7 @@ d. Write an advice to settle the argument between Bob and Chantal. \textbf{[4 po
 ```{r, fig.width=5, fig.height=2}
 #WRITE YOUR CODE HERE
 movies2 <- movies2 %>%
-  mutate(vote_average_rounded = floor(vote_average))  
+  mutate(vote_average_rounded = floor(vote_average))
 
 # Histogram met ggplot2
 ggplot(movies2, aes(x = vote_average_rounded)) +
@@ -487,33 +487,52 @@ The floor function is used to round the numbers and ggplot + geom histogram to p
 
 *step b*
 
-```{r}
-#WRITE YOUR CODE HERE
+```{r, fig.width=5, fig.height=2}
+#calculting mean profits per category and plotting scatterplot
+
+mean_profits_plot = movies2 %>%
+  group_by(vote_average_rounded) %>%
+  summarise(mean_profit = mean(profits, na.rm = T))
+
+ggplot(mean_profits_plot, aes(x = vote_average_rounded, y = mean_profit)) + 
+  geom_point()+
+  labs(title = "Vote Rate vs Mean Profits", x = "Average Vote Rate Rounded", y = "Mean Profits")
 
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The profits are the highest if the movie has a rating of 8.
 
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#new sub data set with yearly mean profits and 95% confidence interval.
+yearly_profits = movies2 %>%
+  group_by(release_year) %>%
+  summarise(mean_profit = mean(profits, na.rm = T), 
+            n = sum(!is.na(profits)), 
+            se = sd(profits, na.rm = T)/ sqrt(n),
+            lower_ci = mean_profit - qt(0.975, df = n - 1) * se, 
+            upper_ci = mean_profit + qt(0.975, df = n-1) * se)
 
+ggplot(yearly_profits, aes(x  = release_year, y = mean_profit)) + 
+  geom_point()+
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.2) + 
+  labs(title = "Mean Profits by Year with 95% CI", x = "Year", y = "Mean Profits (X 1000)")
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Here we plotted the yearly average profits with a 95% confidence interval
 
 *step d*
 
 **Your Answer:**
 
-Write your formulated response here.
+When we put the results together, the rating group at the top in plot 3b looks most promising, because it has the highest average profit on our data. At the same time, the year plot in 3c shows that the results can change over time and that our certainty is different for each year. A good plan is to aim for projects that are likely to fall in the higher rating group; while also checking the recent years with narrow bars when setting expectations. We have to be careful with years that have wide bars, because those averages are less stable. This means focusing on the higher rating group, but also keeping an eye on changes between years. Also do not rely on one single year with low certainty
 
 # Week 4 
 
