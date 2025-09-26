@@ -550,78 +550,90 @@ g. Who do you think is correct? Bob or Chantal? What would you advise the movie 
 
 ```{r}
 #WRITE YOUR CODE HERE
+model = lm(profits ~ budget, data = movies2)
+summary(model)
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Here we set up a regression model and printed the summary of the model
 
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#look at summary of model above
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Looking at the summary of the model above, we see that the estimated value of beta 1 is 2.277e-06. This means that every dollar spent extra is associated with a profits increase by 2.277e-06. So the coefficient is very small and implies that there could be a weak relationship between budget and profits.
 
 *step c*
 
 ```{r}
-#WRITE YOUR CODE HERE
-
+#look at summary of model above
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+H0: beta 1 is 0 and H1: beta 1 is not equal to 0. The test statistic is beta 1 and we reject for small values. Looking at the summary of the model above, we see under the column variable Pr(>|t|) that the p-value is <2e-16 which is extremely small and smaller than any significance rate. Therefore we reject the null hypothesis that beta 1 is equal to 0.
 
 *step d*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#We already created the new variable log profits before so here we start first with creating the new variable log budget and make a new regression model
+
+movies2 = movies2%>%
+  mutate(budget = ifelse(budget == 0, NA_real_, budget))
+
+movies2 = movies2 %>%
+  mutate(log_budget = log(budget))
+
+movies2 = movies2 %>%
+  mutate(log_budget = ifelse(is.infinite(log_budget), NA_real_, log_budget))
+
+model_new = lm(log_profits ~ log_budget, data = movies2)
+summary(model_new)
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Here we have a new regression model of the logarithm of budgets and profits
 
 *step e*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#Look at summary model_new above
 
 ```
 
 **Your Answer:**
-
-Write your formulated response here.
+The new estimated value of beta 1 is 0.68289. We can interpret this now as an elasticity. So in this case a 1% increase in budget is associated with a 0.68289 increase in profits. This relationship shows that profits are inelastic with respect to the budget
 
 *step f*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#Look at summary model and summary model_new above
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+When looking at which model has a better fit, we compare the R^2 values. In the level level model the value of the R^2 is 0.3659 and in the log log model the R^2 is 0.3517. This implies that the level level model is relatively a better fit as the R^2 of the level level model is greater than the R^2 of the log log model.
 
 *step g*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#Concluding by looking at the summary of model and model_new above
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Bob is likely right to be concerned about budgets are getting out of hand. The data shows that profits do not increase as much as budgets do looking at the log log model where a 1% increase in budget is associated with 0.68% profit increase. This implies that Chantal's argument that spending more brings more than proportional profits is not backed by our regression model. In conclusion, the movie studio should be careful with budget decisions and look at other things that might boost profits more effectively.
 
 2
 
@@ -631,25 +643,38 @@ c. Now, have a close look at your data frame. Can you find any instances of male
 
 *step a*
 
-```{r}
+```{r, fig.width = 5, fig.height = 2}
 #WRITE YOUR CODE HERE
+plot_log = movies2%>%
+  filter(!is.na(first_actor_gender))%>%
+  group_by(first_actor_gender) %>%
+  summarise(mean_log_budget = mean(log_budget, na.rm = T), 
+            se = sd(log_budget, na.rm = T)/sqrt(n()),
+            low_ci = mean_log_budget - 1.96 * se,
+            up_ci = mean_log_budget + 1.96 * se)
+
+ggplot(plot_log, aes(x = first_actor_gender, y = mean_log_budget)) + 
+  geom_point()+
+  geom_errorbar(aes(ymin = low_ci, ymax = up_ci), width = 0.2)+
+  labs(title = "Mean Log of Budgets by First Actor Gender", y = "Mean Log of Budget", x = "First Actor Gender")
 
 ```
 
 **Your Answer:**
+Movies with male first actors have higher average budgets compared to those with female leads based on the mean of the log of budgets. This suggests a budget disparity associated with the gender of the actor.
 
-Write your formulated response here.
 
 *step b*
 
 ```{r}
 #WRITE YOUR CODE HERE
-
+ols_model = lm(log_budget ~ first_actor_gender, data = movies2)
+summary(ols_model)
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+The value of beta 1 of 0.4992 is significantly greater than 0. This means that the log of budget is 0.4992 higher for male leads versus female leads on average. So male actors are linked to higher budgets and this perfectly confirms our conclusion of the plot where we saw the same thing: male actors are associated with higher budgets compared to female leads
 
 *step c*
 
