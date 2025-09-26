@@ -568,7 +568,7 @@ Here we set up a regression model and printed the summary of the model
 
 **Your Answer:**
 
-Looking at the summary of the model above, we see that the estimated value of beta 1 is 2.277e-06. This means that every dollar spent extra is associated with a profits increase by 2.277e-06. So the coefficient is very small and implies that there could be a weak relationship between budget and profits.
+Looking at the summary of the model above, we see that the estimated value of beta 1 is 2.277e-06. This means that every dollar extra in profits is associated with a budget increase by 2.277e-06. So the coefficient is very small and implies that there could be a weak relationship between budget and profits.
 
 *step c*
 
@@ -611,7 +611,7 @@ Here we have a new regression model of the logarithm of budgets and profits
 ```
 
 **Your Answer:**
-The new estimated value of beta 1 is 0.68289. We can interpret this now as an elasticity. So in this case a 1% increase in budget is associated with a 0.68289 increase in profits. This relationship shows that profits are inelastic with respect to the budget
+The new estimated value of beta 1 is 0.68289. We can interpret this now as an elasticity. So in this case a 1% increase in profits is associated with a 0.68289 increase in the budget. 
 
 *step f*
 
@@ -633,7 +633,7 @@ When looking at which model has a better fit, we compare the R^2 values. In the 
 
 **Your Answer:**
 
-Bob is likely right to be concerned about budgets are getting out of hand. The data shows that profits do not increase as much as budgets do looking at the log log model where a 1% increase in budget is associated with 0.68% profit increase. This implies that Chantal's argument that spending more brings more than proportional profits is not backed by our regression model. In conclusion, the movie studio should be careful with budget decisions and look at other things that might boost profits more effectively.
+Chantal's argument that spending more brings more than proportional profits is backed by our regression model as a 1% increase in profits is correlated with an increase of 0.68% in budget. In conclusion, the movie studio should be careful with budget decisions and look at other things that might boost profits more effectively.
 
 2
 
