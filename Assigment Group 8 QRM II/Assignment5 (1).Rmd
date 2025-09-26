@@ -568,7 +568,7 @@ Here we set up a regression model and printed the summary of the model
 
 **Your Answer:**
 
-Looking at the summary of the model above, we see that the estimated value of beta 1 is 2.277e-06. This means that every dollar extra in profits is associated with a budget increase by 2.277e-06. So the coefficient is very small and implies that there could be a weak relationship between budget and profits.
+Looking at the summary of the model above, we see that the estimated value of beta 1 is 2.277e-06. This means that an increase in the budget is associated with an increase in profits by 2.277e-06. So the coefficient is very small and implies that there could be a weak relationship between budget and profits.
 
 *step c*
 
@@ -611,7 +611,7 @@ Here we have a new regression model of the logarithm of budgets and profits
 ```
 
 **Your Answer:**
-The new estimated value of beta 1 is 0.68289. We can interpret this now as an elasticity. So in this case a 1% increase in profits is associated with a 0.68289 increase in the budget. 
+The new estimated value of beta 1 is 0.68289. We can interpret this now as an elasticity. So in this case a 1% increase in budget is associated with a 0.68289% increase in the profit. 
 
 *step f*
 
@@ -633,7 +633,7 @@ When looking at which model has a better fit, we compare the R^2 values. In the 
 
 **Your Answer:**
 
-Chantal's argument that spending more brings more than proportional profits is backed by our regression model as a 1% increase in profits is correlated with an increase of 0.68% in budget. In conclusion, the movie studio should be careful with budget decisions and look at other things that might boost profits more effectively.
+I think that Bob is right as 1% increase in the budget is associated to an increase of 0.68% in profits.This implies that the budget is getting out of hand just as Bob stated and that Chantal's argument that spending more brings more than proportional profits is not backed by our regression model. In conclusion, the movie studio should also be producing more cheaper movies.
 
 2
 
@@ -685,7 +685,7 @@ The value of beta 1 of 0.4992 is significantly greater than 0. This means that t
 
 **Your Answer:**
 
-Write your formulated response here.
+Yes, we have found female actors mislabeled as male like Brit Marling who is a female and was labeled as male and also Jackie Chan who is mistakenly labeled as female. This implies that the coefficient is undervalued for male as some female actors are also taken into account of which the budget is usually lower than the male.
 
 # Week 5
 
