@@ -705,23 +705,36 @@ f. Estimate a model that is able to predict the revenue of this movie. Give its 
 
 ```{r}
 #WRITE YOUR CODE HERE
+monthly_profits = movies2 %>%
+  group_by(release_month) %>%
+  summarise(mean_profits = mean(profits, na.rm = T), 
+            se_profit = sd(profits, na.rm = T) / sqrt(n()))
 
+ggplot(monthly_profits, aes(x = release_month, y = mean_profits)) + 
+  geom_col()+
+  geom_errorbar(aes(ymin = mean_profits - se_profit, ymax = mean_profits + se_profit), width = 0.2) + 
+  scale_x_continuous(breaks = 1:12, labels = c("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec")) + 
+  labs(title = "Mean Profit by Release Month", y = "Mean Profit", x = "Release Month")
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+We see that there is significant variety between months, so we can indicate that the release month does matter to profits with peaks in May, June, November and December.
 
 *step b*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#creating dummy variable english
+movies2$English_release = ifelse(movies2$original_language == "en", 1, 0)
+
+#OLS model
+model_week_5 = lm(log_profits ~ log_budget + English_release + release_month, data = movies2)
+summary(model_week_5)
 
 ```
 
 **Your Answer:**
-
-Write your formulated response here.
+The first coefficient of log_budget is 0.65976, which implies that an increase in the budget of 1% is associated with an 0.6597 percent increase in the profits, holding all the other variables constant. The second coefficient of English_release implies an association of an increase of 0.36321 percent of profits if the original language of the movie is English, compared to non-English movies and holding all the other variables constant. The third coefficient of the linear term of the release months implies that each additional month number is associated with an increase of 0.03811, holding all the other variables constant
 
 *step c*
 
@@ -732,18 +745,28 @@ Write your formulated response here.
 
 **Your Answer:**
 
-Write your formulated response here.
+The null hypothesis is that beta 3, which is the coefficient of the release months, is 0 and the alternative hypotheis is that beta 3 is not equal to 0 and therefore significant. If we look in the summary of the OLS model, we observe a p-value for release months of 0.071. At common significance level of alfa equals 0.05, a p-value of 0.071 is greater than the significance level and therefore we fail to reject the null hypothesis. This means that there is not enough evidence that the coefficient of the release month is significant, holding the other variables constant.
 
 *step d*
 
 ```{r}
-#WRITE YOUR CODE HERE
+#Converting release month as a factor 
+movies2$release_month = as.factor(movies2$release_month)
+
+#new OLS model more flexible
+
+flexible_model = lm(log_profits ~ log_budget + English_release + release_month, data = movies2)
+summary(flexible_model)
+
+#Testing null hypothesis, f-test for multiple terms
+lm(log_profits ~ log_budget + English_release, data = movies2)
+anova(lm(log_profits ~ log_budget + English_release, data = movies2), flexible_model)
 
 ```
 
 **Your Answer:**
 
-Write your formulated response here.
+Looking at the plot under question a, the pattern was not clearly linear as there was more variety. So a linear specification did not fit well. After testing whether all the coefficients of the release months are equal to 0, we observe a p-value of 0.0593, which is higher than the common significance level of 0.05, so again we fail to reject the null hypothesis as we do not have enough evidence to fail the null hypothesis. So the coefficients of the release months are not significant, holding the other variables constant.
 
 *step e*
 
@@ -754,12 +777,28 @@ Write your formulated response here.
 
 **Your Answer:**
 
-Write your formulated response here.
+Based on the flexible model and the test hypothesis, we came to the conclusion that we do not have enough evidence that, while holding the other variables constant, the month of release had significant impact on profits. So maybe the executive should not look at a particular month to maximize revenue but rather look at marketing strategies and competition in the market. So just other factors to maximize revenue than release month.
 
 *step f*
 
 
 ```{r}
-#WRITE YOUR CODE HERE
+#prediction of profits new movie
+model_week_5 = lm(log_profits ~ log_budget + English_release + release_month, data = movies2)
+new_data = data.frame(log_budget = log(40e6), English_release = 1, release_month = factor(6, level = levels(movies2$release_month)))
+predicted_log_profit = predict(model_week_5, newdata = new_data)
+predicted_profit = exp(predicted_log_profit)
+print(predicted_profit)
+
+#prediction interval
+pred_interval = predict(model_week_5, newdata = new_data, interval = "prediction", level = 0.99)
+lower_bound = exp(pred_interval[1, "lwr"])
+upper_bound = exp(pred_interval[1, "upr"])
+
+cat("Predicted Profit:", predicted_profit, "\n")
+cat("99% Prediction Interval:(", lower_bound, ",", upper_bound,") \n")
 
 ```
+
+**Your Answer: **
+The predicted profit is 68.502.641 dollars and the 99% prediction interval is (2.913.186 , 1.610.817.918 )
